@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FIfFKon42 – Programm</title>
+<meta name="description" content="Programm der FIfFKon42 „Keine Panik! Resilienz in der Polykrise“ – 30. Oktober bis 1. November 2026, Delphi Saal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root {
+  --bg: #f3f2ef; --surface: #ffffff; --surface-2: #e9e7e1; --fg: #1a1814; --muted: #605c54; --line: #ddd9d0;
+  --accent: #0e7c66; --accent-fg: #ffffff; --accent-soft: #d3eee6;
+  --gold: #b07400; --gold-soft: #f6e6c2;
+  --t-prog: #0e7c66; --t-kultur: #a3348a; --t-pause: #7a756b;
+  --now: #c24f1d;
+  --f-display: "Familjen Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 12px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #14130f; --surface: #1f1d18; --surface-2: #2c2922; --fg: #f1efe8; --muted: #a8a397; --line: #3a362d;
+  --accent: #3fcaa9; --accent-fg: #0b1512; --accent-soft: #123028;
+  --gold: #e8b74a; --gold-soft: #3a2e0c;
+  --t-prog: #3fcaa9; --t-kultur: #e981cf; --t-pause: #9c968a;
+  --now: #ff7a45; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #14130f; --surface: #1f1d18; --surface-2: #2c2922; --fg: #f1efe8; --muted: #a8a397; --line: #3a362d;
+  --accent: #3fcaa9; --accent-fg: #0b1512; --accent-soft: #123028;
+  --gold: #e8b74a; --gold-soft: #3a2e0c;
+  --t-prog: #3fcaa9; --t-kultur: #e981cf; --t-pause: #9c968a;
+  --now: #ff7a45; color-scheme: dark }
+
+* { box-sizing: border-box }
+[hidden] { display: none !important }
+html, body { height: 100% }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15px; line-height: 1.5; margin: 0; padding: 0 16px; min-height: 100dvh; overscroll-behavior-y: none }
+.wrap { max-width: 860px; margin-inline: auto; width: 100% }
+button, input, select { font: inherit; color: inherit }
+button { cursor: pointer }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+a { color: var(--accent) }
+
+/* ---------- header / bar ---------- */
+.bar { position: sticky; top: 0; z-index: 20; background: var(--bg); margin-inline: -16px; padding: max(10px, env(safe-area-inset-top, 0px)) 16px 10px; border-bottom: 1px solid var(--line) }
+.head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px }
+.brand { font-family: var(--f-display); font-weight: 700; font-size: 20px; letter-spacing: -.01em }
+.brand small { font-weight: 600; font-size: 13px; color: var(--muted); font-family: var(--f-body) }
+.spacer { flex: 1 }
+.icon { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 700; color: var(--muted) }
+.icon:hover { color: var(--fg) }
+
+.rows { display: flex; gap: 8px; align-items: center; flex-wrap: wrap }
+#days { display: flex; gap: 6px; flex-wrap: wrap }
+#days button { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-family: var(--f-display); font-weight: 600; font-size: 14px; position: relative }
+#days button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg) }
+#days button .mo { color: var(--muted); font-weight: 500 }
+#days button[aria-pressed="true"] .mo { color: var(--surface-2) }
+#days button.has-pick::after { content: ""; position: absolute; top: 5px; right: 7px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold) }
+
+/* filters */
+.filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 9px }
+.search { flex: 1; min-width: 150px; display: flex; align-items: center; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px }
+.search input { border: 0; background: none; outline: none; width: 100%; font-size: 14px }
+.search svg { flex: none; color: var(--muted) }
+.tchip, .fbtn { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px }
+.tchip { color: var(--muted) }
+.tchip::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--tc, var(--muted)) }
+.tchip[aria-pressed="true"] { color: var(--fg); border-color: var(--tc); background: color-mix(in srgb, var(--tc) 14%, var(--surface)) }
+.fbtn.on { color: var(--gold); border-color: var(--gold); background: var(--gold-soft) }
+
+/* dayline */
+.dayline { position: relative; height: 24px; margin: 12px 2px 0; touch-action: none; cursor: pointer; outline: none }
+.dayline::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line) }
+.dl-in { position: relative; height: 100% }
+.dl-in > span { position: absolute; top: 50%; pointer-events: none }
+.dl-done { left: 0; height: 3px; margin-top: -1px; border-radius: 2px; background: var(--now); opacity: .85 }
+.dl-now { width: 10px; height: 10px; margin: -5px 0 0 -5px; border-radius: 50%; background: var(--now); box-shadow: 0 0 0 4px color-mix(in srgb, var(--now) 25%, transparent) }
+.dl-n { width: 2px; height: 9px; margin: -4px 0 0 -1px; border-radius: 1px; background: var(--muted); opacity: .75 }
+.dl-n.pk { width: 4px; height: 13px; margin: -6px 0 0 -2px; border-radius: 2px; background: var(--gold); opacity: 1; box-shadow: 0 0 0 1.5px var(--bg) }
+.dayline .cap { position: absolute; top: 50%; transform: translateY(-50%); font-family: var(--f-mono); font-size: 11px; color: var(--muted) }
+.dayline .cap.l { left: 0 } .dayline .cap.r { right: 0 }
+
+/* ---------- program list ---------- */
+main { padding: 14px 0 60px }
+.count { color: var(--muted); font-size: 13px; margin: 2px 2px 12px; font-family: var(--f-mono) }
+.slot-h { font-family: var(--f-mono); font-weight: 700; font-size: 12px; color: var(--muted); letter-spacing: .04em; margin: 18px 2px 8px; text-transform: uppercase }
+.slot-h:first-child { margin-top: 2px }
+
+.ses { border: 1px solid var(--line); border-left: 4px solid var(--tc, var(--line)); border-radius: var(--r); background: var(--surface); margin-bottom: 10px; overflow: hidden }
+.ses.picked { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) }
+.ses.live { box-shadow: 0 0 0 1px var(--now) }
+.ses > summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid; gap: 5px }
+.ses > summary::-webkit-details-marker { display: none }
+.ses-meta { display: flex; align-items: center; gap: 8px; font-family: var(--f-mono); font-size: 12px; color: var(--muted); flex-wrap: wrap }
+.ses-meta .time { color: var(--fg); font-weight: 700 }
+.ses-meta .dur { opacity: .8 }
+.np { background: var(--now); color: #fff; font-family: var(--f-body); font-weight: 700; font-size: 10px; letter-spacing: .06em; padding: 2px 7px; border-radius: 999px }
+.ses-title { display: flex; align-items: flex-start; gap: 10px; justify-content: space-between }
+.ses-title > span { font-family: var(--f-display); font-weight: 600; font-size: 17px; line-height: 1.25 }
+.ses-spk { color: var(--muted); font-size: 13.5px }
+.star { flex: none; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; font-size: 12px; font-weight: 700; white-space: nowrap; color: var(--muted) }
+.star[aria-pressed="true"] { background: var(--gold-soft); border-color: var(--gold); color: var(--gold) }
+.ses[open] > summary { border-bottom: 1px solid var(--line) }
+.ses-body { padding: 12px 14px 14px; display: grid; gap: 12px }
+.tags { display: flex; gap: 6px; flex-wrap: wrap }
+.tag { font-size: 11px; font-weight: 700; color: var(--muted); background: var(--surface-2); border-radius: 999px; padding: 3px 9px }
+.tag.trk { color: var(--tc); background: color-mix(in srgb, var(--tc) 14%, var(--surface)) }
+.desc { white-space: pre-wrap; line-height: 1.6 }
+.spk { border-top: 1px dashed var(--line); padding-top: 10px }
+.spk-n { font-family: var(--f-display); font-weight: 600 }
+.spk details { margin-top: 4px } .spk summary { color: var(--accent); font-size: 13px; cursor: pointer }
+.spk-bio { white-space: pre-wrap; color: var(--muted); font-size: 13.5px; margin-top: 6px; line-height: 1.55 }
+.talklink { font-size: 13px; font-weight: 700 }
+
+.foot { color: var(--muted); font-size: 12px; line-height: 1.55; margin: 30px 2px 10px; border-top: 1px solid var(--line); padding-top: 14px }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--fg); color: var(--bg); padding: 9px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; z-index: 60; box-shadow: 0 6px 24px rgba(0,0,0,.25) }
+@keyframes ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent) } 100% { box-shadow: 0 0 0 10px transparent } }
+.ses.ping { animation: ping .9s ease-out 1 }
+</style>
+
+<div class="bar wrap-outer">
+  <div class="wrap">
+    <div class="head">
+      <div class="brand">FIfFKon42 <small id="sub"></small></div>
+      <span class="spacer"></span>
+      <button class="icon" id="now-btn" type="button">Jetzt</button>
+      <button class="icon" id="theme" type="button" aria-label="Darstellung wechseln">Auto</button>
+    </div>
+    <div class="rows">
+      <div id="days"></div>
+    </div>
+    <div class="filters">
+      <label class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="Programm durchsuchen …" aria-label="Programm durchsuchen" autocomplete="off">
+      </label>
+      <div id="track-chips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+      <button class="fbtn" id="only-stars" type="button" aria-pressed="false">★ Meine Auswahl</button>
+    </div>
+    <div class="dayline" id="dayline" role="slider" tabindex="0" aria-label="Tagesverlauf" aria-valuetext="">
+      <span class="cap l" id="cap-l"></span><span class="cap r" id="cap-r"></span>
+      <div class="dl-in" id="dl-in"></div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <p class="count" id="count"></p>
+  <div id="list"></div>
+  <p class="foot" id="foot"></p>
+</main>
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script type="application/json" id="data">{"conf":{"title":"FIfFKon42","subtitle":"Keine Panik! Resilienz in der Polykrise","venue":"Delphi Saal","base":"https://fahrplan.2026.fiffkon.de/fiffkon26/schedule/"},"speakers":{"NRJYCM":{"n":"Jonin Herzig","bio":"Jonin Herzig (*1998, they/keine) ist Schauspieler:in, Performer*in und\nSpoken Word Artist. They hat am Mozarteum Salzburg Schauspiel\nstudiert und lebt in Berlin. Jonin ist seit über 10 Jahren fester\nBestandteil der deutschsprachigen Poetry Slam Szene. Schwerpunkte\nin their Arbeiten sind Identitäten, (Körper-) Politik und Aktivismus. Jonin\narbeitet an der Schnittstelle von Theater und politischer Bildung wie\nzum Beispiel beim erfolgreichen Projekt Theater Techno Tempel\n(https://taz.de/Hausbesetzung-als-Theater/!6130468/). Jonin ist auch Teil des neuen Hörspiels von Roger Graf “Ein Fall für Nora Matti”. \n\nJonin moderiert am Freitag das FIfFKon-Programm."},"U3NCKU":{"n":"Stefan Hügel","bio":"Stefan Hügel ist seit 1993 Mitglied des FIfF, seit 1994 Diplom-Informatiker und seit 2009 Vorsitzender des FIfF. Seine Interessensgebiete sind IT-Sicherheit und Datenschutz, Künstliche Intelligenz und die friedliche Nutzung der Informatik. Zusätzlich kümmert er sich um die Redaktion der FIfF-Kommunikation und den Weizenbaum-Studienpreis. Er lebt und arbeitet in Frankfurt am Main."},"7P83EF":{"n":"Christiane Floyd","bio":"Prof. Dr. Christiane Floyd ist eine österreichische Informatikerin und Mitgründerin des FIfF, die 1978 als erste Professorin für Informatik im deutschsprachigen Raum an die TU Berlin berufen wurde. Sie gilt als Pionierin für die Informatik, da sie die Softwareentwicklung für sozio-technische Fragestellungen öffnete, etwa im STEPS-Modell („Softwaretechnik für evolutionäre und partizipative Systemgestaltung“).\n\n- https://de.wikipedia.org/wiki/Christiane_Floyd"},"A7EBLP":{"n":"Constanze Kurz","bio":"Constanze Kurz ist promovierte Informatikerin, Autorin, Journalistin und Herausgeberin von Büchern, zuletzt Cyberwar. Ihre Kolumne „Aus dem Maschinenraum“ erschien von 2010 bis 2019 im Feuilleton der FAZ und sie schreibt regelmäßig für Netzpolitik.org. Sie lebt in Berlin und ist ehrenamtlich Sprecherin des Chaos Computer Clubs. Sie war Sachverständige der Enquête-Kommission „Internet und digitale Gesellschaft“ des Bundestags. Sie erhielt den Toleranz-Preis für Zivilcourage und die Theodor-Heuss-Medaille."},"BBZUTH":{"n":"Hans-Jörg Kreowski","bio":"Hans-Jörg Kreowski ist Professor (i.R.) für Theoretische Informatik an der Universität Bremen. Neben der theoretischen Fundierung der Informatik hat er sich seit seinem Studium auch in Wort und Schrift mit den gesellschaftlichen Auswirkungen von Wissenschaft auseinandergesetzt, wobei die Verflechtung von Informatik und Rüstung einen Schwerpunkt bildet. Er ist Gründungsmitglied des Forums InformatikerInnen für Frieden und gesellschaftliche Verantwortung (FIfF), seit langem Mitglied im Vorstand, und von 2003 bis 2009 war er auch dessen Vorsitzender. Er ist Redaktionsmitglied der FIfF-Kommunikation, vertritt das FIfF im Vorstand der Zeitschrift Wissenschaft und Frieden und ist seit 2013 Mitglied der Leibniz-Sozietät der Wissenschaften zu Berlin, wo er zusammen mit Wolfgang Hofkirchner den Arbeitskreis Emergente Systeme, Information und Gesellschaft organisiert. Von 2019 bis 2022 war er außerdem Mitherausgeber des Grundrechte-Reports. Er arbeitet mit im Arbeitskreis „Gegen bewaffnete Drohnen“ und in der Cyberpeace-Kampagne."},"RC3PWZ":{"n":"Jennifer Menninger","bio":"Jennifer Menninger ist freiberufliche Expertin für Friedens- und Sicherheitspolitik. Sie beschäftigt sich vor allem mit feministischen Perspektiven zu Abrüstung, Frieden und Digitalisierung."},"PULKPG":{"n":"Rainer Rehak","bio":"Rainer Rehak ist wissenschaftlicher Mitarbeiter in der Gruppe „Digitalisierung, Nachhaltigkeit und Teilhabe“ am Weizenbaum-Institut für die vernetzte Gesellschaft, ist wissenschaftlicher Mitarbeiter am Wissenschaftszentrum Berlin für Sozialforschung (WZB) und promovierte an der TU Berlin zu gesellschaftlicher Systemgestaltung, systemischer IT-Sicherheit und kollektivem Datenschutz.\n\nEr studierte Informatik und Philosophie in Berlin und Hong Kong und beschäftigt sich seit über 15 Jahren mit den Implikationen der Computerisierung der Gesellschaft. Seine Forschungsfelder sind Technikfolgenabschätzung, kollektiver Datenschutz, systemische IT-Sicherheit, staatliches Hacking, Informatik und Ethik, Technikfiktionen, Digitalisierung und Nachhaltigkeit, konviviale und demokratische Digitaltechnik, epistemische Grundlagen von Automatisierung, digitaler (De-)Kolonialismus, sowie die Implikationen und Grenzen von KI-Systemen.\n\nEr publiziert zudem regelmäßig auch in nicht-wissenschaftlichen Medien und ist Sachverständiger für Parlamente (z. B. den Deutschen Bundestag) und Gerichte (z. B. das Bundesverfassungsgericht). Er initiierte gemeinsam mit anderen Digitalpolitik- sowie Umweltorganisationen die „Bits & Bäume“-Konferenzreihe für Digitalisierung und Nachhaltigkeit. Rainer Rehak ist Ko-Vorsitz des Forums InformatikerInnen für Frieden und gesellschaftliche Verantwortung (FIfF)."},"999EUN":{"n":"Wiebke Dönnebrink","bio":"Wiebke Dönnebrink ist Referentin bei der Gesellschaft für Informatik, wo sie sich vorrangig für mehr Cybersicherheit im KRITIS-Bereich, Datenschutz und einen kritischen Blick auf KI einsetzt. Sie hat Krisen- und Sicherheitsmanagement für Cybersicherheit studiert und freut sich immer über die Entdeckung einer neuen Open Source-Anwendung."},"MJR7BZ":{"n":"Marieke Petersen","bio":"Marieke Petersen ist studierte Sicherheitswissenschaftlerin und über Cybersecurity zur Netzpolitik gelangt. Sie stellt sich die Frage, wie Digitalisierung für den Menschen gemacht werden kann: Inklusiv, nachhaltig und sicher. Ziel dabei ist es, die digitale Souveränität Einzelner und einer Gemeinschaft zu gewährleisten."},"K9ECJQ":{"n":"Margita Zallmann","bio":"Margita Zallmann ist Informatikerin und Volkswirtin. Sie ist seit Ende 2023 Mitglied im Vorstand des Forums InformatikerInnen für Frieden und gesellschaftliche Verantwortung und beteiligt sich an der Cyberpeace-Kampagne des FIfF. Ihre weiteren politischen Interessen gelten insbesondere dem Umwelt- und Klimaschutz."},"UHW9FG":{"n":"RBRT","bio":"RBRT (Robert Oeser) moves between classical, contemporary and electronic music, approaching composition without fixed rules or prescribed forms. His music follows feel and flow, allowing a piece to develop intuitively, not constrained by genre or structure.\n\nNatural sounds and processes are a recurring source of inspiration: the movement of water, waves and shifting currents can be heard translated into electronic textures, rhythms and evolving sonic landscapes. Real and imagined sounds merge, transformed through electronic means, into something that sits somewhere between the familiar and the surreal.\n\nWith a background in sound engineering and years of experience across guitar, drums and electronic instruments, RBRT approaches music as much through sound design as through composition. He was also a member of a Berlin band associated with the city's emergence of the indie post-rock scene in the mid-2000s.\n\n- https://soundcloud.com/robertoeser"},"RBUGXK":{"n":"Perplex","bio":"Surft gern Wellen, besonders elektronische."},"LQEBPH":{"n":"Paula Menzel","bio":"Paula entwickelt Journalismus für eine Generation, die von klassischen Nachrichtensendungen längst nicht mehr erreicht wird. Für Formate wie \"Atlas\", \"Was die Woche wichtig war\" oder \"ZDF Unbubble\" verbindet sie gesellschaftliche Debatten mit plattformgerechtem Storytelling und einem starken Gespür für digitale Diskurse. 2025 wurde ihre Arbeit bei \"Atlas\" mit dem Grimme-Preis ausgezeichnet. Ihre Themen reichen von toxischen Tiktok-Trends über vergessene Krisen bis hin zu Fragen von Identität, Ausgrenzung und gesellschaftlicher Teilhabe. Dabei setzt sie auf Dialog statt Polarisierung und macht Perspektiven sichtbar, die in klassischen Medien oft fehlen.\n\nPaula moderiert am Samstag und Sonntag das FIfFKon-Programm."},"ZSQYQU":{"n":"Alexandra Keiner","bio":"Alexandra Keiner ist Soziologin am Weizenbaum-Institut in Berlin. Ihre Forschungsschwerpunkte liegen in den Bereichen Wirtschaftssoziologie, digitale Finanz- und Zahlungsinfrastrukturen sowie Migration. In ihrer Dissertation untersucht sie die politische Ökonomie digitaler Zahlungssysteme und beschäftigt sich unter anderem mit der Bezahlkarte für Asylsuchende in Deutschland sowie der Digitalisierung von Auslandsüberweisungen."},"MCLCV3":{"n":"Oliver Meurer","bio":"Oliver Meurer ist studentischer Mitarbeiter im Forschungsprojekt „Community Data Centers“ der Forschungsgruppe „Digitalisierung, Nachhaltigkeit und Teilhabe“ unter der Leitung von Dr. André Ullrich. Er studiert Internationale Entwicklung im Master an der Universität Wien und arbeitet dort zudem als Tutor für Transdisziplinäre Entwicklungsforschung."},"NZJNJD":{"n":"Tara Merk","bio":"Tara Merk ist Postdoc am Weizenbaum-Institut, wo sie zum Thema Community Data Centers forscht. Zuvor arbeitete sie u.a. im Rahmen des ERC BlockchainGov am CNRS Paris, als ICDE-Fellow an der New School NY, bei Metagov und Other Internet. Ziel ihrer Arbeit ist die Erforschung innovativer Eigentumsmodelle, die mehr Menschen Mitspracherechte und finanzielle Beteiligungen an digitalen Infrastrukturen – von Plattformen bis hin zu Rechenzentren – ermöglichen."},"TY83SR":{"n":"André Ullrich","bio":"André Ullrich leitet die Forschungsgruppe „Digitalisierung, Nachhaltigkeit und Teilhabe“ am Weizenbaum-Institut für die vernetzte Gesellschaft und habilitiert sich gegenwärtig zu verantwortungsvoller und nachhaltiger Digitalisierung. Er studierte Betriebswirtschaftslehre in Potsdam und Moskau und promovierte zu Eigenschaften wandlungsfähiger Systeme an der Universität Potsdam. Dort baute er auch die Lernfabrik im Zentrum Industrie 4.0 auf und leitete diese. Als Gastwissenschaftler war er an den Universitäten Stellenbosch, Queensland University of Technology sowie Hong Kong Polytechnic University tätig. Danach arbeitete er im Rahmen einer Nachwuchsforschergruppe an transformativen Potentialen digital vernetzter Produktion für Mensch, Umwelt und Technik als Post-Doktorand an der Universität Potsdam. Die Schwerpunkte seiner Arbeit liegen im Themenbereich der Chancen und Risiken der Digitalisierung für die sozial-ökologische Transformation von Unternehmen und Gesellschaft."},"RRBZND":{"n":"Dorian Wachsmann","bio":"Dorian Wachsmann arbeitet als wissenschaftlicher Mitarbeiter im Kompetenzzentrum Öffentliche IT (ÖFIT) am Fraunhofer-Institut FOKUS. Seine Themenschwerpunkte sind nachhaltige Digitalisierung und Künstliche Intelligenz. Außerdem arbeitet er im Bereich der Web – und Softwareentwicklung. Er absolvierte ein Masterstudium der Informatik mit Fokus auf Künstliche Intelligenz und Internettechnologien an der Freien Universität Berlin"},"RAATLK":{"n":"Mareike Lisker","bio":"Mareike Lisker arbeitete am HIIG als studentische Mitarbeiterin in dem Forschungsprogramm „Daten, Akteure, Infrastrukturen“."},"Q3PE7F":{"n":"Paola Lopez","bio":"Paola Lopez ist Mathematikerin und große Verfechterin des Schreibens: Sie schreibt wissenschaftliche Texte als wissenschaftliche Mitarbeiterin an der Informatik der Uni Bremen; sie schreibt essayistisch in ihrer „KI-Kolumne“ in der Zeitschrift „Merkur“; außerdem schreibt sie literarisch, zuletzt als Autorin des Romans „Die Summe unserer Teile“."},"P3EPAB":{"n":"Cléo Mieulet","bio":"Cléo Mieulet war 2025/2026 Senior Fellow am Forschungsinstitut für Nachhaltigkeit (RIFS) Potsdam und ist Resilienzagentin der Designagentur NEW STANDARD.S. Sie mit Mitgründerin des Social Franchise KREISLER in Berlin-Neukölln, das einen Verbund von Nachbarschaftsläden mit Leih- und Reparaturinfrastruktur schafft. Sie wirkt mit im Verbund Kooperatives Wirtschafen Deutschland und RIPESS. Sie ist Mitglied des CSX-Netzwerks e.V. für Gemeinschaftsgetragenes Wirtschaften."},"YX8BBJ":{"n":"Paul Jerchel","bio":"Paul Jerchel ist Vorstandsmitglied des Instituts für Unternehmensdemokratie, das genossenschaftliche Nachfolgen durch Belegschaften begleitet. Im Rahmen der Schriftenreihe RIFS Discussion Papers erschien von ihm zuletzt \"Commons -Public Partnerships. Neue Kooperationsformen für die sozialökologische Transformation\" (mit Judith Pape, 2022). Er ist Mitglied des CSX-Netzwerks e.V. für Gemeinschaftsgetragenes Wirtschaften."},"MHLVRP":{"n":"Ulrike Menne","bio":"Ich blicke auf 35 Jahre Arbeit und Leben in selbstverwalteten anarchistischen Strukturen zurück.\nWas mit Hausbesetzungen Anfang der 90ger Jahre begonnen hat, ist nun ein Leben auf einem Wagenplatz und eine Arbeit beim selbstverwalteten freien Radio Corax in Halle/Saale geworden.\nPolitische Arbeit und politischer Aktivismus zieht sich durch mein Leben. \nEin anderes Leben ist für mich nicht vorstellbar."},"VZWWVJ":{"n":"Jens Hunger","bio":"Selbst ständig Wissen Schaffender - aufgewachsen im Rummel der sogenannten friedlichen Revolution - notorisch aktivistischer Naturwissenschaftler im Irrgarten der angewandten soziologischen Feldforschung."},"HVAZUM":{"n":"Scherrie","bio":"Network heißt für mich mit Menschen reden, und IT ist für mich entweder Computer oder LARP-Con.\nIch bin Vorstandsmitglied bei Anoxinon e.V. und arbeite bei der Gesellschaft für Informatik e.V.\nPrivat und beruflich versuche ich, die Welt jeden Tag ein bisschen weniger unsicher zu machen: für dich, mich, Unternehmen und öffentliche Einrichtungen."},"PCJJQX":{"n":"Stefan Ullrich","bio":"Stefan Ullrich ist im Ehrenamt Sprecher der Fachgruppe Ethik der Gesellschaft für Informatik und hauptberuflich KI-Erklärbär für den öffentlichen Dienst."},"L899QC":{"n":"Gabis kleine Kneipe","bio":"Die Berliner Band Gabis Kleine Kneipe: https://www.gabiskleinekneipe.de\n\nGabis kleine Kneipe ist ein zeitloser Ort der verirrte Seelen, Nachtschwärmer, finstere, wie leuchtende Gestalten anzieht. Das Trio bestehend aus Sebastian Zimmermann, Kopf und Gypsy Gitarrenheld, Jochen Carls, Virtuose und Schalk am klassischen Kontrabass und Gabriela Lindl, Seele und Stimme am schwingenden Mikrofon. Ihr Sound ist unverwechselbar, einzig und doch lässt er an die goldene Zeit in Berlin erinnern. Es sind besondere Klänge, die diese drei Musiker ihrem Publikum eröffnen. Von schunkelnden Chansons, angehauchtem 20er Jahre Gefühl, sanftem Jazz, ist eines sonnenklar, diese Musik berührt, diese Musik lässt Schmunzeln, diese Band gleicht kaltem Wodka von der Bar. Bleich gehst du hinein mit roten Wangen kommst du hinaus."},"SCJTAH":{"n":"Nadia Zaboura","bio":"Nadia Zaboura ist Kommunikationswissenschaftlerin, Medienkritikerin und preisgekrönte Publizistin. Sie ist Co-Autorin des Buchs \"Medien zwischen Macht und Ohnmacht. Wie Journalismus Vertrauen zurückgewinnen kann\" (2025). \n\n- https://www.zaboura.de"},"389LYA":{"n":"Sabine Griebsch / eGouvernante","bio":"Sabine Griebsch ist Krisenmanagerin (Cyber/IT) sowie Senior Advisor Government Resilience."},"3MCEFF":{"n":"Rike Hildebrandt","bio":"Rike Hildebrandt ist Ökonomin mit einem Fokus auf Fragen der Vergesellschaftung im analogen und digitalen Raum. Sie war zuvor beim BUND, wo sie vor allem zu den Themen Digitalisierung und Nachhaltigkeit, sowie Ressourcenschutz gearbeitet hat. Sie hat lange die Koordination des Bits&Bäume-Netzwerks geleitet und war bei Germanwatch angebunden."}},"sessions":[{"id":"95","day":"2026-10-30","t0":"17:30","t1":"18:15","title":"Ankommen","desc":"Ankommen, Heißgetränk und gute Kekse","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/RFBBQG/","spk":["NRJYCM"],"svc":true},{"id":"99","day":"2026-10-30","t0":"18:15","t1":"18:20","title":"Begrüßungsworte","desc":"Willkommen im Delphi","track":"Programm","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/MTDSY7/","spk":["U3NCKU"],"svc":false},{"id":"89","day":"2026-10-30","t0":"18:20","t1":"19:00","title":"Keynote: Wohin, Künstliche Intelligenz? Wege finden in der Polykrise","desc":"Dieser Vortrag versteht sich als Einladung und Ermutigung, sich zu engagieren und je nach fachlichem Blickwinkel Beiträge zu leisten, die in der Gesamtheit zu einer stimmigen Vision für die Zukunft führen und sich als Grundlage für weitere Aktionen eignen.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/BCBSVL/","spk":["7P83EF"],"svc":false},{"id":"100","day":"2026-10-30","t0":"19:00","t1":"19:30","title":"Keynote: Jetzt einsatzbereit – Was sich an digitaler Dauerbeobachtung zusammenbraut","desc":"Während alle noch über die Tech-Bros und ihre Super-Intelligenzen reden und sich ansonsten die Wunden der letzten Krise lecken, ist eine ziemlich geräuschlose digitale Aufrüstungsrunde bei deutschen Polizeien und Geheimdiensten im Gange, die ihresgleichen sucht. Die Bundesländer verordneten ihren Polizeien die Erlaubnis für automatisierte Datenanalysen, Verhaltensscanner, biometrische Fernidentifizierung und natürlich noch mehr Staatstrojaner. Ein erstaunlicher Ausbau der Geheimdienste des Bundes steht an, und der Hackback ist auch fast schon beschlossene Sache. Darüber müssen wir reden.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/ZNSRHC/","spk":["A7EBLP"],"svc":false},{"id":"103","day":"2026-10-30","t0":"19:30","t1":"20:00","title":"Abendpause","desc":"Kurz Luft holen","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/WNLY93/","spk":[],"svc":true},{"id":"70","day":"2026-10-30","t0":"20:00","t1":"21:00","title":"Cyberpeace-Slam","desc":"Cyberpeace ist die Gegenposition zu Cyberkrieg und zur Digitalisierung des Kriegs überhaupt, Verschiedene Aspekte der Problematik werden im einstündigen Cyberpeace-Slam beleuchtet, der aus 3 Kurzvorträgen von je 7 Minuten besteht plus Diskussion.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/VPNNTF/","spk":["BBZUTH","RC3PWZ","PULKPG","999EUN","MJR7BZ","K9ECJQ"],"svc":false},{"id":"91","day":"2026-10-30","t0":"21:00","t1":"21:45","title":"Musik: RBRT feat. Perplex (vintage synth / piano / electronic)","desc":"A symphony of elements in the earthly realms, consciously disrupting human manufactured chaos.","track":"Kultur","fmt":"Konzert / Musik","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/KNRT9B/","spk":["UHW9FG","RBUGXK"],"svc":false},{"id":"98","day":"2026-10-30","t0":"21:45","t1":"22:00","title":"Geselligkeit im Anschluss (tba)","desc":"Austausch mit Musik.","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/LTCAGG/","spk":[],"svc":true},{"id":"96","day":"2026-10-31","t0":"09:30","t1":"10:00","title":"Ankommen","desc":"Wiederkommen, Kaffee und wieder gutes Gebäck.","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/TDMSMY/","spk":["LQEBPH"],"svc":true},{"id":"73","day":"2026-10-31","t0":"10:00","t1":"10:20","title":"Small AI – Über die Vorteile kleiner IT-Systeme","desc":"Das Kernproblem von IT-Systemen und damit auch KI ist Größe bzw. Komplexität, aber es geht ja auch anders.","track":"Programm","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/TQCNGX/","spk":["PULKPG"],"svc":false},{"id":"86","day":"2026-10-31","t0":"10:20","t1":"10:40","title":"Digitale Zahlungsinfrastrukturen und die politische Ökonomie der Bezahlkarte für Asylsuchende in Deutschland","desc":"Der Beitrag untersucht die Bezahlkarte für Asylsuchende als digitale Zahlungsinfrastruktur und analysiert die Zusammenarbeit staatlicher Behörden mit globalen Zahlungsunternehmen. Er zeigt, wie finanzielle Infrastrukturen zu Instrumenten migrationspolitischer Kontrolle werden und erweitert Debatten über Digitalisierung und Autokratisierung um die politische Rolle globaler Zahlungsunternehmen.","track":"Programm","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/VVLKNV/","spk":["ZSQYQU"],"svc":false},{"id":"104","day":"2026-10-31","t0":"10:40","t1":"11:00","title":"Kekschenpause","desc":"Päuschen für Käffchen und Kekschen","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/T7JMXX/","spk":[],"svc":true},{"id":"80","day":"2026-10-31","t0":"11:00","t1":"11:45","title":"Common Ground, Common Cloud – Community Data Center als Antwort auf Machtasymmetrien und Polykrise","desc":"Rechenzentren (RZ) sind das physische Rückgrat vieler digitaler Anwendungen. Sie stehen an der Schnittstelle von Digitalisierung, Energieversorgung, Klimawandel, globalen Lieferketten und Sicherheitspolitik (Edwards et al., 2024). An Rechenzentren werden die Dynamiken der Polykrise besonders deutlich: Energieengpässe verteuern den energieintensiven Betrieb und erschweren gleichzeitig Klimaschutzmaßnahmen. Steigende Temperaturen und zunehmende Hitzeperioden erhöhen den Kühlbedarf von Servern und damit auch den Strom- und Wasserverbrauch. Zudem konkurrieren große RZ mit ihrem hohen Energie- und Wasserbedarf direkt mit den Bedürfnissen lokaler Akteur:innen und der Zivilgesellschaft. Störungen globaler Lieferketten und Handelseinschränkungen durch geopolitische Konflikte wirken sich auf die Verfügbarkeit von Hardware und Ersatzteilen sowie auf Cyberrisiken aus. \nRZ sind Orte, an denen sich die Machtkonzentration einiger weniger Big-Tech-Unternehmen materialisiert (Brodie, 2023). Sie kontrollieren große Teile der digitalen Wertschöpfungskette, von Daten über Algorithmen und Plattformen bis hin zur Recheninfrastruktur. Technologien und damit verbundene konventionelle Infrastrukturansätze von Big-Tech-Unternehmen tragen zur Rationalisierung und Verfestigung bestehender Herrschaftsstrukturen bei (Weizenbaum, 1978). Dabei sind die gesellschaftlichen Kosten und Nutzen von RZ weitestgehend ungleich verteilt. Lokale Gemeinden und Bürger:innen tragen häufig die direkten Umweltfolgen (Rehak, 2024), während die finanziellen Gewinne bei den Unternehmen und steuerlich anderswo anfallen. \nInternational formieren sich zunehmend Proteste gegen den Ausbau großer RZ. Allein in den USA beteiligen sich mittlerweile fast eine halbe Million Menschen an Protesten gegen RZ. Aber auch andernorts wie beispielsweise in Marseille, Dublin, Aragón und Ceará organisieren sich Bürger:innen (Dachwitz und Vorkul 2026). Auch in Deutschland nimmt der Widerstand gegen geplante Rechenzentren zu. Der Fall Maintal verdeutlicht exemplarisch, dass sich die Konflikte nicht auf die Infrastruktur beschränken, sondern Fragen der Energieversorgung, Umweltbelastung, kommunaler Mitbestimmung und demokratischer Legitimation betreffen (Ronge 2026).\nWährend viele Regierungen gerade erst den Regulierungsbedarf gegenüber RZ begreifen, haben sich über Jahre weltweit bereits diverse, gemeinschaftlich getragene RZ etabliert. Diese werden in diesem Beitrag unter dem Begriff Community Data Center (CDCe) zusammengefasst und als potenzielle Alternative zu den von Big-Tech-Unternehmen geprägten oligopolistischen Strukturen untersucht. Dennoch bleiben gemeinschaftlich getragene RZ bislang eine Nischenerscheinung und ihre Ausgestaltungsformen sind kaum systematisch erfasst. Daraus ergibt sich folgende Fragestellung für diesen Beitrag: Welche Gestaltungsmerkmale gemeinschaftlicher Rechenzentren lassen sich konzeptionell und empirisch identifizieren, und welche Potenziale und Grenzen weisen sie im Umgang mit den Dynamiken der Polykrise auf?\nZur Beantwortung dieser Frage erfolgt die Analyse in zwei Schritten. Erstens wird ein Möglichkeitsraum der Gestaltungsmerkmale für CDCe konstruiert, der die Bandbreite möglicher Ausprägungen systematisch beschreibt. Dieser Möglichkeitsraum leitet sich aus der Analyse realer Fallbeispiele (wie WOBCOM, dem feministischen Serverkollektiv actinomy in Bremen, Dataport in Norddeutschland und der Genossenschaft GAD eG) sowie aus 34 idealtypischen CDCe-Modellen ab, die im Rahmen partizipativer Workshops mit 130 Menschen erarbeitet wurden. Zweitens evaluieren wir kritisch, ob und inwiefern CDCe den Auswirkungen und krisenverstärkenden Dynamiken der Polykrise in lokalen Gemeinschaften entgegenwirken können.\nZiel des Beitrags ist die Entwicklung eines konzeptionellen Möglichkeitsraums gemeinschaftlicher Rechenzentren. Die resultierende Taxonomie schafft einen analytischen Rahmen, um unterschiedliche CDCe-Modelle hinsichtlich ihrer Potenziale und Grenzen im Umgang mit den Dynamiken der Polykrise systematisch zu vergleichen. Dadurch werden unterschiedliche Governance-, Eigentums- und Infrastrukturmodelle gemeinschaftlicher Rechenzentren sowie ihre jeweiligen Resilienzpotenziale systematisch vergleichbar gemacht. Zugleich macht sie sichtbar, unter welchen Bedingungen CDCe einen Beitrag zum Abbau bestehender Machtasymmetrien in der digitalen Infrastruktur leisten können.\n\nLiteraturverzeichnis\n\nBrodie, P. (2023). Data infrastructure studies on an unequal planet. Big Data & Society, 10(1), 20539517231182402. https://doi.org/10.1177/20539517231182402\n\nEdwards, D., Cooper, Z. G. T., & Hogan, M. (2025). The making of critical data center studies. Convergence: The International Journal of Research into New Media Technologies, 31(2), 429–446. https://doi.org/10.1177/13548565231224157\n\nRehak, R. (2024, September 30). On the (im)possibility of sustainable artificial intelligence. Internet Policy Review. https://policyreview.info/articles/news/impossibility-sustainable-artificial-intelligence/1804\n\nRonge, M. (2026, May 11). Planänderung bei Rechenzentrum in Maintal. hessenschau.de. https://www.hessenschau.de/wirtschaft/rechenzentrum-in-maintal-proteste-bringen-projekt-ins-stocken-v2,maintal-rechenzentrum-gestoppt-100.html\n\nVorkul, L., & Dachwitz, I. (2026). Rechenzentren sind Vampire: Wo sich lokaler Widerstand gegen den KI-Hype formiert. netzpolitik.org. https://netzpolitik.org/2026/rechenzentren-sind-vampire-wo-sich-lokaler-widerstand-gegen-den-ki-hype-formiert/\n\nWeizenbaum, J. (2023). Die Macht der Computer und die Ohnmacht der Vernunft (16. Aufl., U. Rennert, Übers.). Suhrkamp. (Originalwerk erschienen 1976)","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/CCSB3D/","spk":["MCLCV3","NZJNJD","TY83SR"],"svc":false},{"id":"87","day":"2026-10-31","t0":"11:45","t1":"12:30","title":"Dezentraler Jugendschutz im Fediverse?","desc":"Mit dem Ziel, Jugendliche zu schützen, führt nach Neuseeland auch Frankreich ein Verbot von Social Media für junge Menschen ein. Weitere Länder wollen nachziehen, auch Deutschland diskutiert. Kritiker*innen halten dagegen: Statt Verboten brauche es Plattformen, die Menschen, und insbesondere Jugendlichen, nicht schaden. \n\nWo steht das Fediverse in diesem Spannungsfeld? Als digital-souverän gehandelte und dezentrale Alternative zu Big-Tech-Monopolen kommt es ohne Empfehlungsalgorithmen und Werbung aus. Müsste es also nicht Teil der Lösung sein? Bisher taucht das Fediverse in der Debatte zu Social Media und Jugendschutz jedoch kaum auf. Dabei wäre es eine gute Gelegenheit, das Fediverse stärker ins öffentliche Bewusstsein zu rücken, seine Vorteile gegenüber Big Tech zu zeigen und gleichzeitig offene Fragen der Gestaltung anzugehen. Was ließe sich bei der derzeit dezentralen Architektur mit verteilten und plattformeigenen Regeln und komplexer Governance überhaupt an gesetzlichen Vorlagen umsetzen? Gibt es möglicherwise schon praktikable Lösungen auf einzelnen Instanzen, von denen sich lernen lässt?\n\nGenau das wollen wir in einem partizipativen Workshop erörtern. Ein kurzer Impuls stellt eine Studie zu über 15.000 Fediverse-Instanzen und ihren Regeln und Moderationspraktiken mit Fokus auf Hate Speech und Misinformation vor, um einen Überblick über den Status quo zu geben. Anschließend gehen wir mit euch ins Gespräch darüber, welche Rolle das Fediverse überhaupt einnehmen kann oder sollte. Will bzw. sollte es überhaupt jugendfreundlich sein? Wenn ja, wie jugendfreundlich ist es jetzt schon? Und welche technischen oder theoretischen Möglichkeiten gäbe es, um Jugendschutz im Fediverse zu gewährleisten?\n\nAuch wenn wir nicht auf alle Fragen Antworten finden werden, wollen wir herausarbeiten, welche Rolle das Fediverse im Bezug auf Jugendschutz einnehmen könnte oder sollte. Daraus lassen sich konkrete Forderungen des FIfF an die Politik darüber ableiten, welche Maßnahmen ergriffen werden sollten.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/B73B33/","spk":["RRBZND","RAATLK"],"svc":false},{"id":"93","day":"2026-10-31","t0":"12:30","t1":"13:30","title":"Mittagspause","desc":"Austausch und Schmaus.","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/TEWYTN/","spk":[],"svc":true},{"id":"88","day":"2026-10-31","t0":"13:30","t1":"14:30","title":"Schreiben jenseits von LLMs als Denktechnik in der Informatik","desc":"In diesem Workshop mit partizipativen Elementen geht es um Schreiben als Trotz und Schreiben als Widerstand – gerade in der Informatik. Die zentrale Frage, die wir bearbeiten und in die Diskussionen mitnehmen werden, ist dabei: \nWie kann das Schreiben als Denktechnik für die Informatik nutzbar gemacht werden?","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/9REJQY/","spk":["Q3PE7F"],"svc":false},{"id":"68","day":"2026-10-31","t0":"14:30","t1":"15:15","title":"Die materielle Kehrseite der Digitalisierung – und wie wir sie reparieren und vor Ort Reparaturinfrastruktur für alle und alles aufbauen","desc":"Jedes Smartphone, jedes Rechenzentrum, jede KI-Anwendung hat eine Kehrseite: Rohstoffe, Energie, Elektroschrott. Während „digitale Resilienz\" meist als Frage von mehr Technologie verhandelt wird, schauen wir auf die Materialität und fragen, welche  Infrastruktur es braucht, um da rauszukommen und danach, was Nachbarschaften in der Polykrise tatsächlich widerstandsfähig macht. Unsere These: kooperativ getragene, dezentrale Infrastrukturen der Reparatur, Wiederverwendung, Kreislaufwirtschaft als Grundversorgung, gerne rechtlich und kommunal dauerhaft verankert. Reparatur ist kein Nischenthema, sondern handfeste IT- und Ressourcenpolitik.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/LSZRA7/","spk":["P3EPAB","YX8BBJ"],"svc":false},{"id":"94","day":"2026-10-31","t0":"15:15","t1":"15:45","title":"Kaffeepause","desc":"Get together mit Heißgetränken und guten Keksen.","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/FF9DRV/","spk":[],"svc":true},{"id":"76","day":"2026-10-31","t0":"15:45","t1":"16:30","title":"Verleihung Weizenbaum-Studienpreise","desc":"Verleihung Weizenbaum-Studienpreise","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/KPQ7L9/","spk":["U3NCKU"],"svc":false},{"id":"77","day":"2026-10-31","t0":"16:30","t1":"17:15","title":"FIfF-Jahresrückblick 2026","desc":"FIfF-Jahresrückblick 2026","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/JZD39K/","spk":["U3NCKU","PULKPG"],"svc":false},{"id":"101","day":"2026-10-31","t0":"17:30","t1":"18:30","title":"Abendessen","desc":"Veganes Abendessen in jedem Ticket enthalten.","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/BHSL8T/","spk":[],"svc":true},{"id":"84","day":"2026-10-31","t0":"18:30","t1":"19:15","title":"Autonomie, Autarkie, Ataraxie, Antipolitik - Anarchistische Organisierung im Wandel der Zeit - Erfahrungen, Analyse, Konzepte","desc":"In einem Vortrag (25 min) wollen wir unsere Erfahrungen mit analoger und digitaler anarchistischer Organisierung aus 35 Jahren anhand ausgewählter Beispiele reflektieren und damit die zugrundeliegenden Konzepte hinsichtlich ihrer Praxistauglichkeit einordnen. Anschließend wollen wir darüber auch in den Austausch kommen und Ansätze für Weiterentwicklungen diskutieren (20 min). Dabei möchten wir den Fokus unter Anderem darauf legen, wie sich analoge Organisierung mit der digitalen Entwicklung verändert hat und was sich daraus für den weiteren Digitalisierungprozess lernen lässt.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/XLXUA9/","spk":["MHLVRP","VZWWVJ"],"svc":false},{"id":"90","day":"2026-10-31","t0":"19:30","t1":"20:15","title":"Back 2 the Future – Raus aus der Dystopie","desc":"Leser*innen von SciFi und Fantasy fragen sich inzwischen regelmäßig, ob sie nicht fälschlicherweise in ihrer Lieblingsdystopie aufgewacht sind: Überwachungstechnik und Predictive Policing, manipulierende Algorithmen und und frei-drehende KI-Agenten wollten wir eigentlich nur aus 1984, „Schöne Neue Welt“ und Minority Report erfahren. Jetzt sehen wir aber, wie Technik entwickelt und teilweise als Heilsversprechen für eine bessere Zukunft verkauft wird. Eigentlich fehlt nur noch der Todesstern, um die Liste abzuschließen. Nun könnten wir die Decke über den Kopf ziehen und uns in eine glückliche Fantasy-Welt träumen, in der Ringe vernichtet oder Kinder durch Schränke klettern. Oder wir erträumen uns selbst eine Welt, in der wir die Probleme des Jetzt lösen können, ob mit oder ohne technische Hilfsmittel sei dahingestellt. Wir wollen daher überlegen, wie eine mögliche Zukunft aussehen kann und wie man diese mittels einer Zukunftsreise erreichen kann. Dabei suchen wir mit den Teilnehmenden nach den notwendigen Akteuren und Stellschrauben, die für die Erreichung notwendig sein werden. Unser Ziel: Einen (vagen) Fahrplan Richtung Utopia entwickeln.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/FCVK87/","spk":["HVAZUM","PCJJQX"],"svc":false},{"id":"102","day":"2026-10-31","t0":"20:30","t1":"21:45","title":"Live-Musik: Gabis Kleine Kneipe","desc":"Postmoderner Chanson und Gossenbossanova, mit Anklängen an die goldenen 20er, mit Texten aus dem depressiven frühen 21. Jahrhundert, wie Brecht und Ketamin.","track":"Kultur","fmt":"Konzert / Musik","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/E79N8F/","spk":["L899QC"],"svc":false},{"id":"97","day":"2026-11-01","t0":"09:30","t1":"10:00","title":"Ankommen","desc":"Wiedersehen am Sonntag früh mit Kaffee und den besten Keksen der Stadt.","track":"Pause","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/AZFEKW/","spk":["LQEBPH"],"svc":true},{"id":"75","day":"2026-11-01","t0":"10:00","t1":"10:45","title":"Wege in den wehrhaften Journalismus","desc":"Das Erstarken vom Faschismus und der AfD stellt den Journalismus vor Herausforderungen. Zu meistern sind diese nur mit antifaschistischem Journalismus.","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/8H7Q8D/","spk":["SCJTAH"],"svc":false},{"id":"78","day":"2026-11-01","t0":"10:45","t1":"11:30","title":"templateZV - Partizipatives Resilienzformat für zivile Verteidigung in Kommunen","desc":"Zivile Verteidigung ist eine gesamtstaatliche, aber kommunal umgesetzte Aufgabe – und hängt an der oft übersehenen digitalen Handlungsfähigkeit der Verwaltung, ohne die keines der vier Felder ziviler Verteidigung funktioniert. Aktuelle Zahlen zu Schwachstellen, Cybercrime und Ransomware-Angriffen belegen die Dringlichkeit, ohne dass daraus bislang systematisch Konsequenzen abgeleitet werden. Der Vortrag schlägt dafür ein partizipatives, dreiphasiges Dialogformat vor (Lagefeststellung, Risikobewertung, prototypische Umsetzung), das auf den Prinzipien Resilienz, Vigilanz und Bottom-up-Innovation beruht und Wissenschaft, Wirtschaft, Staat und Zivilgesellschaft systematisch zusammenbringt. Die zugrunde liegende Haltung: Resilienz ist keine Ausnahmeaufgabe, sondern gelebte Daseinsvorsorge, die nur durch geübte Praxis, Evidenzbasierung, Subsidiarität und strukturelle Lernfähigkeit trägt – Vorbereitung statt Improvisation als Maßstab staatlicher Handlungsfähigkeit. Daraus resultieren Forderungen an Verwaltung, Gesetzgebung sowie Wissenschaft und Praxis, solche Formate zu verstetigen und in verbindliche Standards zu überführen.","track":"Programm","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/ZMNUDN/","spk":["389LYA"],"svc":false},{"id":"105","day":"2026-11-01","t0":"11:30","t1":"11:45","title":"Flammender Aufbruch","desc":"Flammender Aufbruch","track":"Programm","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/T39VWM/","spk":["3MCEFF"],"svc":false},{"id":"106","day":"2026-11-01","t0":"11:45","t1":"12:00","title":"Verschnaufpause","desc":"Verschnaufpause","track":"Programm","fmt":"Kurzer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/QRPNLT/","spk":[],"svc":false},{"id":"81","day":"2026-11-01","t0":"12:00","t1":"14:00","title":"Mitgliederversammlung","desc":"Mitgliederversammlung","track":"Programm","fmt":"Langer Talk","lang":"de","url":"https://fahrplan.2026.fiffkon.de/fiffkon26/talk/E9V8NZ/","spk":[],"svc":false}]}</script>
+<script>
+(function () {
+  const D = JSON.parse(document.getElementById('data').textContent);
+  const SP = D.speakers;
+  const MON = ['Jan','Feb','März','Apr','Mai','Juni','Juli','Aug','Sep','Okt','Nov','Dez'];
+  const WD = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const toMin = s => +s.slice(0, 2) * 60 + +s.slice(3, 5);
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem('fiffkon26.' + k); return v == null ? d : JSON.parse(v) } catch (e) { return d } },
+    set(k, v) { try { localStorage.setItem('fiffkon26.' + k, JSON.stringify(v)) } catch (e) {} }
+  };
+  document.getElementById('sub').textContent = D.conf.subtitle;
+
+  D.sessions.forEach(s => { s.a = toMin(s.t0); s.b = toMin(s.t1); if (s.b < s.a) s.b += 1440 });
+  const DAYS = [...new Set(D.sessions.map(s => s.day))].sort().map(d => {
+    const [y, m, da] = d.split('-').map(Number), dt = new Date(Date.UTC(y, m - 1, da));
+    return [d, `${WD[dt.getUTCDay()]} ${da}.`, MON[m - 1]];
+  });
+  const TRACKS = [...new Set(D.sessions.filter(s => !s.svc).map(s => s.track).filter(Boolean))];
+  const trackCls = t => t === 'Kultur' ? 'kultur' : t === 'Pause' ? 'pause' : 'prog';
+  const tcVar = s => s.svc ? 'var(--t-pause)' : `var(--t-${trackCls(s.track)})`;
+  const durLabel = s => { const m = s.b - s.a; return m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`; };
+
+  const F = store.get('filters', {});
+  const state = { day: DAYS[0][0], q: F.q || '', tracks: (F.tracks || []).filter(t => TRACKS.includes(t)), stars: !!F.stars };
+  const stars = new Set(store.get('stars', []));
+  const byDay = d => D.sessions.filter(s => s.day === d).sort((a, b) => a.a - b.a);
+  const dayLabel = d => { const x = DAYS.find(y => y[0] === d); return `${x[1]} ${x[2]}`; };
+
+  function berlinNow() {
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+      .formatToParts(new Date()).map(x => [x.type, x.value]));
+    return { date: `${p.year}-${p.month}-${p.day}`, m: +p.hour * 60 + +p.minute };
+  }
+  const isLive = s => { const n = berlinNow(); return s.day === n.date && s.a <= n.m && n.m < s.b; };
+
+  // ---------- static DOM ----------
+  const $ = id => document.getElementById(id);
+  $('days').innerHTML = DAYS.map(([d, l, mo]) => `<button type="button" data-day="${d}">${l}<span class="mo"> ${mo}</span></button>`).join('');
+  $('track-chips').innerHTML = TRACKS.map(t => `<button class="tchip" type="button" data-track="${esc(t)}" aria-pressed="false" style="--tc:var(--t-${trackCls(t)})">${esc(t)}</button>`).join('');
+
+  function setFilters() {
+    $('q').value = state.q;
+    $('only-stars').setAttribute('aria-pressed', state.stars);
+    $('only-stars').classList.toggle('on', state.stars);
+    document.querySelectorAll('#track-chips [data-track]').forEach(b => b.setAttribute('aria-pressed', state.tracks.includes(b.dataset.track)));
+    store.set('filters', { q: state.q, tracks: state.tracks, stars: state.stars });
+  }
+
+  // ---------- render ----------
+  function spkHTML(s) {
+    return s.spk.map(code => { const p = SP[code]; if (!p) return '';
+      return `<div class="spk"><div class="spk-n">${esc(p.n)}</div>${p.bio ? `<details><summary>Über ${esc(p.n.split(' ')[0])}</summary><div class="spk-bio">${esc(p.bio)}</div></details>` : ''}</div>`;
+    }).join('');
+  }
+  function names(s) { return s.spk.map(c => SP[c] && SP[c].n).filter(Boolean).join(', '); }
+  function sesHTML(s) {
+    const pk = stars.has(s.id), live = isLive(s);
+    const tags = [s.fmt, s.track, s.lang === 'de' ? 'Deutsch' : s.lang].filter(Boolean);
+    return `<details class="ses${pk ? ' picked' : ''}${live ? ' live' : ''}" style="--tc:${tcVar(s)}" data-id="${esc(s.id)}">
+      <summary>
+        <div class="ses-meta">${live ? '<span class="np">JETZT</span>' : ''}<span class="time">${s.t0}–${s.t1}</span><span class="dur">· ${durLabel(s)}</span></div>
+        <div class="ses-title"><span>${esc(s.title)}</span>${s.svc ? '' : `<button type="button" class="star" data-star="${esc(s.id)}" aria-pressed="${pk}">${pk ? '★ Dabei' : '☆ Merken'}</button>`}</div>
+        ${s.spk.length ? `<div class="ses-spk">${esc(names(s))}</div>` : ''}
+      </summary>
+      <div class="ses-body">
+        ${tags.length ? `<div class="tags">${tags.map((t, i) => `<span class="tag${i === 1 && !s.svc ? ' trk' : ''}">${esc(t)}</span>`).join('')}</div>` : ''}
+        ${s.desc ? `<div class="desc">${esc(s.desc)}</div>` : '<div class="count" style="margin:0">Keine Beschreibung veröffentlicht.</div>'}
+        ${spkHTML(s)}
+        ${s.url ? `<div><a class="talklink" href="${esc(s.url)}" target="_blank" rel="noopener">Im offiziellen Fahrplan öffnen →</a></div>` : ''}
+      </div></details>`;
+  }
+
+  function matches(s) {
+    if (state.stars && !stars.has(s.id)) return false;
+    if (state.tracks.length && !state.tracks.includes(s.track)) return false;
+    const w = state.q.trim().toLowerCase();
+    if (w) { const h = (s.title + ' ' + s.desc + ' ' + names(s) + ' ' + (s.track || '') + ' ' + (s.fmt || '')).toLowerCase(); if (!h.includes(w)) return false; }
+    return true;
+  }
+
+  function renderList() {
+    const all = byDay(state.day);
+    const l = all.filter(matches);
+    const picks = all.filter(s => stars.has(s.id)).length;
+    $('count').textContent = `${l.length} Programmpunkte · ${dayLabel(state.day)}${picks ? ' · ' + picks + ' gemerkt' : ''}`;
+    $('list').innerHTML = l.length ? l.map(sesHTML).join('') : `<p class="count">Nichts gefunden. Suche leeren oder anderen Track wählen.</p>`;
+  }
+
+  function renderDays() {
+    document.querySelectorAll('#days button').forEach(b => {
+      b.setAttribute('aria-pressed', b.dataset.day === state.day);
+      b.classList.toggle('has-pick', byDay(b.dataset.day).some(s => stars.has(s.id)));
+    });
+  }
+
+  function renderDayline() {
+    const l = byDay(state.day), t0 = Math.min(...l.map(s => s.a)), t1 = Math.max(...l.map(s => s.b)), span = Math.max(1, t1 - t0);
+    const hm = m => String(Math.floor(m / 60) % 24).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+    $('cap-l').textContent = hm(t0); $('cap-r').textContent = hm(t1);
+    const pc = m => (Math.min(1, Math.max(0, (m - t0) / span)) * 100).toFixed(2) + '%';
+    $('dl-in').innerHTML = `<span class="dl-done" id="dl-done" hidden></span><span class="dl-now" id="dl-now" hidden></span>` +
+      l.map(s => `<span class="dl-n${stars.has(s.id) ? ' pk' : ''}" data-id="${esc(s.id)}" data-a="${s.a}" style="left:${pc(s.a)}"></span>`).join('');
+    renderNow();
+  }
+  function renderNow() {
+    const l = byDay(state.day), t0 = Math.min(...l.map(s => s.a)), t1 = Math.max(...l.map(s => s.b)), span = Math.max(1, t1 - t0);
+    const n = berlinNow(), done = $('dl-done'), glow = $('dl-now');
+    if (!done) return;
+    const f = n.date < state.day ? -1 : n.date > state.day ? 1 : (n.m - t0) / span;
+    done.hidden = f <= 0; done.style.width = (Math.min(1, Math.max(0, f)) * 100).toFixed(2) + '%';
+    glow.hidden = f < 0 || f > 1; glow.style.left = (Math.min(1, Math.max(0, f)) * 100).toFixed(2) + '%';
+  }
+  setInterval(() => { renderNow(); }, 30000);
+
+  function render() { renderDays(); renderDayline(); renderList(); }
+
+  // ---------- events ----------
+  $('days').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; state.day = b.dataset.day; render(); scrollTo({ top: 0 }); });
+  $('q').addEventListener('input', e => { state.q = e.target.value; if (state.q) state.stars = false; setFilters(); renderList(); });
+  $('track-chips').addEventListener('click', e => {
+    const b = e.target.closest('[data-track]'); if (!b) return;
+    const t = b.dataset.track;
+    state.tracks = state.tracks.includes(t) ? state.tracks.filter(x => x !== t) : [...state.tracks, t];
+    if (state.tracks.length) state.stars = false;
+    setFilters(); renderList();
+  });
+  $('only-stars').addEventListener('click', () => { state.stars = !state.stars; if (state.stars) { state.q = ''; state.tracks = []; } setFilters(); renderList(); });
+
+  // star toggle (delegated)
+  $('list').addEventListener('click', e => {
+    const st = e.target.closest('[data-star]'); if (!st) return;
+    e.preventDefault(); e.stopPropagation();
+    const id = st.dataset.star;
+    stars.has(id) ? stars.delete(id) : stars.add(id); store.set('stars', [...stars]);
+    const on = stars.has(id);
+    document.querySelectorAll(`[data-star="${CSS.escape(id)}"]`).forEach(b => { b.setAttribute('aria-pressed', on); b.textContent = on ? '★ Dabei' : '☆ Merken'; const c = b.closest('.ses'); if (c) c.classList.toggle('picked', on); });
+    renderDays(); renderDayline();
+    if (state.stars) renderList();
+  });
+  // only one open at a time
+  document.addEventListener('toggle', e => {
+    const d = e.target;
+    if (!(d instanceof HTMLDetailsElement) || !d.classList.contains('ses') || !d.open) return;
+    document.querySelectorAll('details.ses[open]').forEach(o => { if (o !== d) o.open = false; });
+  }, true);
+
+  // dayline: jump to the session nearest the pointer
+  function daylineAt(e) {
+    const r = $('dl-in').getBoundingClientRect(), x = e.clientX - r.left;
+    let best = null, bd = 1e9;
+    $('dl-in').querySelectorAll('.dl-n').forEach(n => { const d = Math.abs(n.getBoundingClientRect().left + 1 - r.left - x); if (d < bd) { bd = d; best = n; } });
+    if (best) jumpTo(best.dataset.id);
+  }
+  function jumpTo(id) {
+    const d = document.querySelector(`#list [data-id="${CSS.escape(id)}"]`); if (!d) return;
+    d.open = true; d.classList.remove('ping'); void d.offsetWidth; d.classList.add('ping');
+    const barH = document.querySelector('.bar').offsetHeight;
+    scrollTo({ top: d.getBoundingClientRect().top + scrollY - barH - 12, behavior: 'smooth' });
+    $('dayline').setAttribute('aria-valuetext', d.querySelector('.ses-title span').textContent);
+  }
+  $('dayline').addEventListener('pointerdown', e => { $('dayline').setPointerCapture(e.pointerId); daylineAt(e); });
+  $('dayline').addEventListener('keydown', e => {
+    const l = byDay(state.day); let i = l.findIndex(s => s.id === ($('dayline').dataset.cur || ''));
+    if (e.key === 'ArrowRight') i = Math.min(l.length - 1, i + 1); else if (e.key === 'ArrowLeft') i = Math.max(0, i - 1); else return;
+    e.preventDefault(); $('dayline').dataset.cur = l[i].id; jumpTo(l[i].id);
+  });
+
+  // theme toggle: auto -> light -> dark
+  const THEMES = ['auto', 'light', 'dark'], TLAB = { auto: 'Auto', light: 'Hell', dark: 'Dunkel' };
+  let theme = store.get('theme', 'auto');
+  function applyTheme() { if (theme === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', theme); $('theme').textContent = TLAB[theme]; }
+  $('theme').addEventListener('click', () => { theme = THEMES[(THEMES.indexOf(theme) + 1) % 3]; store.set('theme', theme); applyTheme(); });
+  applyTheme();
+
+  // jump to today / current day
+  let toastT;
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2000); }
+  $('now-btn').addEventListener('click', () => {
+    const n = berlinNow();
+    if (n.date < DAYS[0][0]) { state.day = DAYS[0][0]; render(); toast('Noch nicht gestartet – erster Tag'); return; }
+    if (n.date > DAYS[DAYS.length - 1][0]) { state.day = DAYS[DAYS.length - 1][0]; render(); toast('Konferenz vorbei – letzter Tag'); return; }
+    state.day = n.date; render();
+    const live = byDay(state.day).find(isLive) || byDay(state.day).find(s => s.a >= n.m);
+    if (live) { jumpTo(live.id); toast(isLive(live) ? 'Läuft gerade' : 'Als Nächstes'); } else toast('Heute');
+  });
+
+  // open the right day at load
+  (function initDay() {
+    const n = berlinNow();
+    if (n.date >= DAYS[0][0] && n.date <= DAYS[DAYS.length - 1][0] && DAYS.some(d => d[0] === n.date)) state.day = n.date;
+  })();
+
+  $('foot').innerHTML = 'Daten aus dem offiziellen FIfFKon-Fahrplan (pretalx), Stand 30. Okt 2026 – spätere Änderungen sind evtl. nicht enthalten. „Merken“ wird nur in diesem Browser gespeichert. Alle Programmpunkte im <b>Delphi Saal</b>. Inoffizielle Programmansicht. Quelle: <a href="' + esc(D.conf.base) + '" target="_blank" rel="noopener">fahrplan.2026.fiffkon.de</a>';
+
+  setFilters();
+  render();
+})();
+</script>
