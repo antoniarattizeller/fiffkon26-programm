@@ -80,7 +80,7 @@ a { color: var(--accent) }
 .fbtn.on { color: var(--gold); border-color: var(--gold); background: var(--gold-soft) }
 
 /* dayline */
-.dayline { position: relative; height: 24px; margin: 12px 2px 0; touch-action: none; cursor: pointer; outline: none }
+.dayline { position: relative; height: 24px; margin: 12px 2px 0 }
 .dayline::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line) }
 .dl-in { position: relative; height: 100% }
 .dl-in > span { position: absolute; top: 50%; pointer-events: none }
@@ -176,7 +176,7 @@ main { padding: 14px 0 60px }
       <div id="track-chips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
       <button class="fbtn" id="only-stars" type="button" aria-pressed="false">★ Meine Auswahl</button>
     </div>
-    <div class="dayline" id="dayline" role="slider" tabindex="0" aria-label="Tagesverlauf" aria-valuetext="">
+    <div class="dayline" id="dayline" role="img" aria-label="Tagesverlauf mit aktueller Uhrzeit und gemerkten Vorträgen">
       <span class="cap l" id="cap-l"></span><span class="cap r" id="cap-r"></span>
       <div class="dl-in" id="dl-in"></div>
     </div>
@@ -302,7 +302,7 @@ main { padding: 14px 0 60px }
     $('cap-l').textContent = hm(t0); $('cap-r').textContent = hm(t1);
     const pc = m => (Math.min(1, Math.max(0, (m - t0) / span)) * 100).toFixed(2) + '%';
     $('dl-in').innerHTML = `<span class="dl-done" id="dl-done" hidden></span><span class="dl-now" id="dl-now" hidden></span>` +
-      l.map(s => `<span class="dl-n${stars.has(s.id) ? ' pk' : ''}" data-id="${esc(s.id)}" data-a="${s.a}" style="left:${pc(s.a)}"></span>`).join('');
+      l.filter(s => stars.has(s.id)).map(s => `<span class="dl-n pk" title="${esc(s.t0 + ' · ' + s.title)}" style="left:${pc(s.a)}"></span>`).join('');
     renderNow();
   }
   function renderNow() {
@@ -355,26 +355,13 @@ main { padding: 14px 0 60px }
     document.querySelectorAll('details.ses[open]').forEach(o => { if (o !== d) o.open = false; });
   }, true);
 
-  // dayline: jump to the session nearest the pointer
-  function daylineAt(e) {
-    const r = $('dl-in').getBoundingClientRect(), x = e.clientX - r.left;
-    let best = null, bd = 1e9;
-    $('dl-in').querySelectorAll('.dl-n').forEach(n => { const d = Math.abs(n.getBoundingClientRect().left + 1 - r.left - x); if (d < bd) { bd = d; best = n; } });
-    if (best) jumpTo(best.dataset.id);
-  }
+  // scroll the list to a talk (used by the "Jetzt" button)
   function jumpTo(id) {
     const d = document.querySelector(`#list [data-id="${CSS.escape(id)}"]`); if (!d) return;
     d.open = true; d.classList.remove('ping'); void d.offsetWidth; d.classList.add('ping');
     const barH = document.querySelector('.bar').offsetHeight;
     scrollTo({ top: d.getBoundingClientRect().top + scrollY - barH - 12, behavior: 'smooth' });
-    $('dayline').setAttribute('aria-valuetext', d.querySelector('.ses-title span').textContent);
   }
-  $('dayline').addEventListener('pointerdown', e => { $('dayline').setPointerCapture(e.pointerId); daylineAt(e); });
-  $('dayline').addEventListener('keydown', e => {
-    const l = byDay(state.day); let i = l.findIndex(s => s.id === ($('dayline').dataset.cur || ''));
-    if (e.key === 'ArrowRight') i = Math.min(l.length - 1, i + 1); else if (e.key === 'ArrowLeft') i = Math.max(0, i - 1); else return;
-    e.preventDefault(); $('dayline').dataset.cur = l[i].id; jumpTo(l[i].id);
-  });
 
   // theme toggle: auto -> light -> dark
   const THEMES = ['auto', 'light', 'dark'], TLAB = { auto: 'Auto', light: 'Hell', dark: 'Dunkel' };
